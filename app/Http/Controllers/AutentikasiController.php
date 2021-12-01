@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\Pengguna;
 use App\Models\Penduduk;
@@ -51,14 +51,24 @@ class AutentikasiController extends Controller
                 'password' => 'required'
             ]
         );
-        $cek = $this->Pengguna->Login(Request()->email, Request()->password);
-        if($cek == null){
+        $password = Pengguna::select('password')->where('email', Request()->email)->first();
+        if($password != ""){
+            if(Hash::check(Request()->password, $password)) {
+                return response()->json([
+                    'status' => 'OK',
+                    'message' => 'Anda berhasil login!'
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'Failed',
+                    'message' => 'Password salah'
+                ], 500);
+            }
+        } else {
             return response()->json([
                 'status' => 'Failed',
-                'message' => 'Pastikan Anda memasukkan email dan password yang benar'
+                'message' => 'Email salah'
             ], 500);
-        }else{
-            return response()->json($cek, 200);
         }
     }
 
@@ -75,7 +85,7 @@ class AutentikasiController extends Controller
         $data = [
             'username' => Request()->username,
             'email' => Request()->email,
-            'password' => Request()->password,
+            'password' => Hash::make(Request()->password),
             'nomor_telepon' => Request()->nomor_telepon,
             'role' => 'Pengguna',
             'penduduk_id' => Request()->penduduk_id,

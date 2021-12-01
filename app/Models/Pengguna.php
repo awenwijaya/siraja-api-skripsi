@@ -8,6 +8,23 @@ use Illuminate\Support\Facades\DB;
 
 class Pengguna extends Model
 {
+
+    protected $table = 'tb_sso';
+
+    protected $fillable = [
+        'user_id',
+        'username',
+        'email',
+        'password',
+        'nomor_telepon',
+        'role',
+        'penduduk_id',
+        'desa_id',
+        'email_verified_at',
+        'remember_token',
+        'token_activation'
+    ];
+
     public function Login($email, $password){
         return DB::table('tb_sso')
         ->select('id')
