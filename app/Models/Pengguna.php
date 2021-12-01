@@ -10,10 +10,11 @@ class Pengguna extends Model
 {
     public function Login($email, $password){
         return DB::table('tb_sso')
+        ->select('id')
         ->where([
             ['email', '=', $email],
             ['password', '=', $password]
-        ])->first();
+        ])->get();
     }
 
     public function Register($data){

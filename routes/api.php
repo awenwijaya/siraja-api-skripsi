@@ -19,6 +19,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//autentikasi
 Route::post('cek_penduduk', [AutentikasiController::class, 'cek_penduduk']);
 Route::post('getdatabynik', [AutentikasiController::class, 'get_data_penduduk_nik']);
 Route::post('login', [AutentikasiController::class, 'login']);
+Route::post('registrasi', [AutentikasiController::class, 'registrasi']);

@@ -20,17 +20,14 @@ class AutentikasiController extends Controller
                 'nik' => 'required'
             ]
         );
-        $hasil_cek = $this->Penduduk->CekPenduduk(Request()->nik);
+        $hasil_cek = Penduduk::select()->where('nik', Request()->nik)->first();
         if($hasil_cek == null) {
             return response()->json([
                 'status' => 'Failed',
                 'message' => 'Data penduduk tidak ditemukan'
             ], 500);
         }else{
-            return response()->json([
-                'status' => 'OK',
-                'message' => 'Data penduduk ditemukan'
-            ], 200);
+            return response()->json($hasil_cek, 200);
         }
     }
 
@@ -43,12 +40,8 @@ class AutentikasiController extends Controller
                 'nik.required' => 'Data NIK penduduk belum diisi'
             ]
         );
-        $data = $this->Penduduk->CekPenduduk(Request()->nik);
-        return response()->json([
-            'status' => 'OK',
-            'message' => 'Data penduduk ditemukan',
-            $data
-        ]);
+        $nama_lengkap = Penduduk::select()->where('nik', Request()->nik)->first();
+        return response()->json($nama_lengkap, 200);
     }
 
     public function login(){
@@ -65,10 +58,35 @@ class AutentikasiController extends Controller
                 'message' => 'Pastikan Anda memasukkan email dan password yang benar'
             ], 500);
         }else{
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'Login berhasil'
-            ], 200);
+            return response()->json($cek, 200);
         }
+    }
+
+    public function registrasi(){
+        Request()->validate([
+            'username' => 'required',
+            'nomor_telepon' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'id_desa' => 'required',
+            'penduduk_id' => 'required',
+        ]);
+
+        $data = [
+            'username' => Request()->username,
+            'email' => Request()->email,
+            'password' => Request()->password,
+            'nomor_telepon' => Request()->nomor_telepon,
+            'role' => 'Pengguna',
+            'penduduk_id' => Request()->penduduk_id,
+            'desa_id' => Request()->id_desa
+        ];
+
+        $this->Pengguna->Register($data);
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Registrasi Akun Berhasil'
+        ], 200);
+
     }
 }
