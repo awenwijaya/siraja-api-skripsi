@@ -37,4 +37,16 @@ class Pengguna extends Model
     public function Register($data){
         DB::table('tb_sso')->insert($data);
     }
+
+    public function KonfirmasiEmail($data, $email) {
+        DB::table('tb_sso')
+        ->where('email', $email)
+        ->update($data);
+    }
+
+    public function showDataByEmail($email){
+        DB::table('tb_sso')
+        ->where('email', $email)
+        ->first();
+    }
 }

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\Pengguna;
 use App\Models\Penduduk;
+use Illuminate\Support\Facades\Crypt;
+use Carbon\Carbon;
 
 class AutentikasiController extends Controller
 {
@@ -52,23 +54,20 @@ class AutentikasiController extends Controller
             ]
         );
         $password = Pengguna::select('password')->where('email', Request()->email)->first();
-        if($password != ""){
-            if(Hash::check(Request()->password, $password)) {
-                return response()->json([
-                    'status' => 'OK',
-                    'message' => 'Anda berhasil login!'
-                ], 200);
-            } else {
-                return response()->json([
-                    'status' => 'Failed',
-                    'message' => 'Password salah'
-                ], 500);
-            }
-        } else {
+        $password_encrypt = Crypt::decryptString($password);
+        $pengguna = Pengguna::select()->where('email', Request()->email)->first();
+        if($password == "" || $password == null) {
             return response()->json([
                 'status' => 'Failed',
                 'message' => 'Email salah'
             ], 500);
+        }else if($password_encrypt != Request()->password){
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Password salah'
+            ], 500);
+        }else{
+            return response()->json($pengguna, 200);
         }
     }
 
@@ -85,7 +84,7 @@ class AutentikasiController extends Controller
         $data = [
             'username' => Request()->username,
             'email' => Request()->email,
-            'password' => Hash::make(Request()->password),
+            'password' => Request()->password,
             'nomor_telepon' => Request()->nomor_telepon,
             'role' => 'Pengguna',
             'penduduk_id' => Request()->penduduk_id,

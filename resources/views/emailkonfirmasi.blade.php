@@ -130,7 +130,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                     <tr>
                         <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">Terima kasih sudah melakukan pendaftaran akun di SiRaja! Tinggal satu langkah lagi sebelum Anda dapat menggunakan layanan SiRaja</p>
+                            <p style="margin: 0;">Terima kasih sudah melakukan pendaftaran akun di SiRaja! Tinggal satu langkah lagi sebelum Anda dapat menggunakan layanan SiRaja </p>
                         </td>
                     </tr>
                     <tr>
@@ -140,7 +140,7 @@
                                     <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
                                         <table border="0" cellspacing="0" cellpadding="0">
                                             <tr>
-                                                <td align="center" style="border-radius: 3px;" bgcolor="#FFA73B"><a href="#" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Konfirmasi Akun</a></td>
+                                                <td align="center" style="border-radius: 3px;" bgcolor="#FFA73B"><a href="http://192.168.18.10:8000/api/verifyemail/{{ $data['email'] }}" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Konfirmasi Akun</a></td>
                                             </tr>
                                         </table>
                                     </td>
