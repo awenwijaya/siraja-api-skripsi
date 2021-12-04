@@ -53,21 +53,18 @@ class AutentikasiController extends Controller
                 'password' => 'required'
             ]
         );
-        $password = Pengguna::select('password')->where('email', Request()->email)->first();
-        $password_encrypt = Crypt::decryptString($password);
-        $pengguna = Pengguna::select()->where('email', Request()->email)->first();
-        if($password == "" || $password == null) {
+        $login = Pengguna::select()->where([
+            ['email', '=', Request()->email],
+            ['password', '=', Request()->password]
+        ])->first();
+
+        if($login == null) {
             return response()->json([
                 'status' => 'Failed',
-                'message' => 'Email salah'
+                'message' => 'Email atau password salah!'
             ], 500);
-        }else if($password_encrypt != Request()->password){
-            return response()->json([
-                'status' => 'Failed',
-                'message' => 'Password salah'
-            ], 500);
-        }else{
-            return response()->json($pengguna, 200);
+        } else {
+            return response()->json($login, 200); 
         }
     }
 
@@ -81,21 +78,32 @@ class AutentikasiController extends Controller
             'penduduk_id' => 'required',
         ]);
 
+        $cek_email = Pengguna::select('email')->where('email', Request()->email)->first();
+        $cek_nomor_telepon = Pengguna::select('nomor_telepon')->where('nomor_telepon', Request()->nomor_telepon)->first();
+        $cek_username = Pengguna::select('username')->where('username', Request()->username)->first();
+
         $data = [
             'username' => Request()->username,
-            'email' => Request()->email,
+            'email' => Request()->email,    
             'password' => Request()->password,
             'nomor_telepon' => Request()->nomor_telepon,
             'role' => 'Pengguna',
             'penduduk_id' => Request()->penduduk_id,
-            'desa_id' => Request()->id_desa
+            'desa_id' => Request()->id_desa,
+            'is_verified' => 'Not Verified'
         ];
 
-        $this->Pengguna->Register($data);
-        return response()->json([
-            'status' => 'OK',
-            'message' => 'Registrasi Akun Berhasil'
-        ], 200);
-
+        if($cek_email != null || $cek_nomor_telepon != null || $cek_username != null) {
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Email, nomor telepon, atau username sudah terdaftar sebelumnya'
+            ], 501);
+        } else {
+            $this->Pengguna->Register($data);
+            return response()->json([
+                'status' => 'OK',
+                'message' => 'Registrasi Akun Berhasil'
+            ], 200);
+        }
     }
 }
