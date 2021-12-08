@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AutentikasiController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\PendudukController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,3 +28,8 @@ Route::post('login', [AutentikasiController::class, 'login']);
 Route::post('registrasi', [AutentikasiController::class, 'registrasi']);
 Route::post('konfirmasiemail', [EmailController::class, 'index']);
 Route::get('verifyemail/{email}', [EmailController::class, 'konfirmasiemail']);
+
+
+//penduduk
+Route::post('getdatapendudukbyid', [PendudukController::class, 'showDataPendudukById']);
+Route::post('getdatadesabyid', [PendudukController::class, 'showDataDesaById']);
