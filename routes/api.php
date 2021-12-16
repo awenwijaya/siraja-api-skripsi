@@ -28,8 +28,12 @@ Route::post('login', [AutentikasiController::class, 'login']);
 Route::post('registrasi', [AutentikasiController::class, 'registrasi']);
 Route::post('konfirmasiemail', [EmailController::class, 'index']);
 Route::get('verifyemail/{email}', [EmailController::class, 'konfirmasiemail']);
+Route::post('cekemail', [AutentikasiController::class, 'cekemail']);
+Route::post('lupapassword', [EmailController::class, 'kirimEmailLupaPassword']);
 
 
-//penduduk
+//profile
 Route::post('getdatapendudukbyid', [PendudukController::class, 'showDataPendudukById']);
 Route::post('getdatadesabyid', [PendudukController::class, 'showDataDesaById']);
+Route::post('getdatapenggunabyid', [PendudukController::class, 'showDataUserById']);
+Route::post('editprofile', [PendudukController::class, 'editProfile']);

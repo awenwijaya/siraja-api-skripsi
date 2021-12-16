@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
+use App\Mail\EmailLupaPassword;
 use App\Models\Pengguna;
 use Carbon\Carbon;
 
@@ -42,5 +43,23 @@ class EmailController extends Controller
             'status' => 'OK',
             'message' => 'Email berhasil dikonfirmasi'
         ]);
+    }
+
+    public function kirimEmailLupaPassword() {
+        Request()->validate([
+            'email' => 'required'
+        ]);
+        $email_tujuan = Request()->email;
+        $pengguna = Pengguna::select()->where('email', Request()->email)->first();
+        $pengguna_decode = json_decode($pengguna);
+        $data = [
+            'email' => $email_tujuan,
+            'nama' => $pengguna_decode->username
+        ];
+        Mail::to(Request()->email)->send(new EmailLupaPassword($data));
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Email lupa password berhasil dikirimkan!'
+        ], 200);
     }
 }

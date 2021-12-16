@@ -110,12 +110,23 @@ class AutentikasiController extends Controller
                 'message' => 'Registrasi Akun Berhasil'
             ], 200);
         }
+    }
 
-        $this->Pengguna->Register($data);
-        return response()->json([
-            'status' => 'OK',
-            'message' => 'Registrasi Akun Berhasil'
-        ], 200);
-
+    public function cekemail() {
+        Request()->validate([
+            'email' => 'required'
+        ]);
+        $cek_email = Pengguna::select('email')->where('email', Request()->email)->first();
+        if($cek_email != null) {
+            return response()->json([
+                'status' => 'OK',
+                'messages' => 'Email pengguna ditemukan'
+            ], 200);
+        }else{
+            return response()->json([
+                'status' => 'Failed',
+                'messages' => 'Email pengguna tidak ditemukan'
+            ], 500);
+        }
     }
 }

@@ -49,4 +49,10 @@ class Pengguna extends Model
         ->where('email', $email)
         ->first();
     }
+
+    public function EditProfile($data, $id) {
+        DB::table('tb_sso')
+        ->where('user_id', $id)
+        ->update($data);
+    }
 }

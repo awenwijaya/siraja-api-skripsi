@@ -36,4 +36,10 @@ class Penduduk extends Model
         ->where('nik', $nik)
         ->first();
     }
+
+    public function EditPenduduk($data, $id) {
+        DB::table('tb_penduduk')
+        ->where('penduduk_id', $id)
+        ->update($data);
+    }
 }
