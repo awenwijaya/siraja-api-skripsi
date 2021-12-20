@@ -31,7 +31,6 @@ Route::get('verifyemail/{email}', [EmailController::class, 'konfirmasiemail']);
 Route::post('cekemail', [AutentikasiController::class, 'cekemail']);
 Route::post('lupapassword', [EmailController::class, 'kirimEmailLupaPassword']);
 
-
 //profile
 Route::post('getdatapendudukbyid', [PendudukController::class, 'showDataPendudukById']);
 Route::post('getdatadesabyid', [PendudukController::class, 'showDataDesaById']);

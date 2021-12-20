@@ -55,4 +55,10 @@ class Pengguna extends Model
         ->where('user_id', $id)
         ->update($data);
     }
+
+    public function ResetPassword($data, $email) {
+        DB::table('tb_sso')
+        ->where('email', $email)
+        ->update($data);
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AutentikasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('forgetpassword/{email}', [AutentikasiController::class, 'showForgetPasswordPage']);
+Route::post('forgetpassword/reset/{email}', [AutentikasiController::class, 'resetPassword'])->name('reset.password');

@@ -129,4 +129,37 @@ class AutentikasiController extends Controller
             ], 500);
         }
     }
+
+    public function showForgetPasswordPage($email) {
+        $cek_email = Pengguna::select('email')->where('email', $email)->first();
+        $dataemail = [];
+        if($cek_email != null) {
+            $dataemail = [
+                'email' => $email
+            ];
+            return view('forgetpassword', compact('cek_email'));
+        }else{
+            return view('emailnotfound');
+        }
+    }
+
+    public function resetPassword($email) {
+        Request()->validate([
+            'password' => 'required',
+            'confirm_password' => 'required'
+        ], [
+            'password.required' => 'Password baru belum terisi',
+            'confirm_password.required' => 'Konfirmasi password belum terisi'
+        ]);
+
+        $data = [
+            'password' => Hash::make(Request()->password)
+        ];
+
+        $this->Pengguna->ResetPassword($data, $email);
+        return response()->json([
+            'status' => 'OK',
+            'messages' => 'Password berhasil diubah!'
+        ], 200);
+    }
 }
