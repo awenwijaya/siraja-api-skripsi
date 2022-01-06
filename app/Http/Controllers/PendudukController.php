@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Pengguna;
 use App\Models\Penduduk;
 use App\Models\Desa;
+use App\Models\Kecamatan;
+use App\Models\Dusun;
 
 class PendudukController extends Controller
 {
@@ -74,5 +76,35 @@ class PendudukController extends Controller
                 'message' => 'Data profil berhasil diubah'
             ], 200);
         }
+    }
+
+    public function showDataKecamatanById() {
+        Request()->validate([
+            'kecamatan_id' => 'required'
+        ]);
+        $data = [
+            'kecamatan_id' => Request()->kecamatan_id
+        ];
+        $data_kecamatan = Kecamatan::select()->where('kecamatan_id', Request()->kecamatan_id)->first();
+        return response()->json($data_kecamatan, 200);
+    }
+
+    public function countPendudukDesa() {
+        Request()->validate([
+            'desa_id' => 'required'
+        ]);
+        $data = Penduduk::where([
+            ['id_desa', '=', Request()->desa_id],
+            ['status_penduduk', '=', 'Aktif']
+        ])->count();
+        return response()->json($data, 200);
+    }
+
+    public function countDusun() {
+        Request()->validate([
+            'desa_id' => 'required'
+        ]);
+        $data = Dusun::where('desa_id', Request()->desa_id)->count();
+        return response()->json($data, 200);
     }
 }

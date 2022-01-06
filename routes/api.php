@@ -32,7 +32,12 @@ Route::post('cekemail', [AutentikasiController::class, 'cekemail']);
 Route::post('lupapassword', [EmailController::class, 'kirimEmailLupaPassword']);
 
 //profile
+Route::post('editprofile', [PendudukController::class, 'editProfile']);
+
+//data
 Route::post('getdatapendudukbyid', [PendudukController::class, 'showDataPendudukById']);
 Route::post('getdatadesabyid', [PendudukController::class, 'showDataDesaById']);
 Route::post('getdatapenggunabyid', [PendudukController::class, 'showDataUserById']);
-Route::post('editprofile', [PendudukController::class, 'editProfile']);
+Route::post('getdatakecamatanbyid', [PendudukController::class, 'showDataKecamatanById']);
+Route::post('countpenduduk', [PendudukController::class, 'countPendudukDesa']);
+Route::post('countdusun', [PendudukController::class, 'countDusun']);

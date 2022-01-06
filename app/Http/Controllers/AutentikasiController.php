@@ -157,9 +157,6 @@ class AutentikasiController extends Controller
         ];
 
         $this->Pengguna->ResetPassword($data, $email);
-        return response()->json([
-            'status' => 'OK',
-            'messages' => 'Password berhasil diubah!'
-        ], 200);
+        return view('resetpasssuccess');
     }
 }
