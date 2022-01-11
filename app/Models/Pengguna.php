@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 class Pengguna extends Model
 {
 
+    use HasFactory;
+
     protected $table = 'tb_sso';
 
     protected $fillable = [
@@ -22,7 +24,9 @@ class Pengguna extends Model
         'desa_id',
         'email_verified_at',
         'remember_token',
-        'token_activation'
+        'token_activation',
+        'created_at',
+        'updated_at'
     ];
 
     public function Login($email, $password){

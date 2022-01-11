@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AutentikasiController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PendudukController;
+use App\Http\Controllers\SKPendudukController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,3 +42,7 @@ Route::post('getdatapenggunabyid', [PendudukController::class, 'showDataUserById
 Route::post('getdatakecamatanbyid', [PendudukController::class, 'showDataKecamatanById']);
 Route::post('countpenduduk', [PendudukController::class, 'countPendudukDesa']);
 Route::post('countdusun', [PendudukController::class, 'countDusun']);
+
+//sk belum menikah
+Route::post('sk/belumnikah/ceknikah', [SKPendudukController::class, 'cek_nikah']);
+Route::post('sk/belumnikah/up', [SKPendudukController::class, 'up_sk_belum_nikah']);
