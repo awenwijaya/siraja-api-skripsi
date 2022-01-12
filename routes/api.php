@@ -46,3 +46,10 @@ Route::post('countdusun', [PendudukController::class, 'countDusun']);
 //sk belum menikah
 Route::post('sk/belumnikah/ceknikah', [SKPendudukController::class, 'cek_nikah']);
 Route::post('sk/belumnikah/up', [SKPendudukController::class, 'up_sk_belum_nikah']);
+
+//sp penghasilan orang tua
+Route::post('/sp/penghasilanortu/getdataortu', [SKPendudukController::class, 'get_data_orang_tua']);
+Route::post('/sp/penghasilanortu/up', [SKPendudukController::class, 'up_sp_penghasilan_ortu']);
+
+//sk kelakuan baik
+Route::post('/sk/kelakuanbaik/up', [SKPendudukController::class, 'up_sk_kelakuan_baik']);
