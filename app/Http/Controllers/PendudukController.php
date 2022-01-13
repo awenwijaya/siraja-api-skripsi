@@ -34,6 +34,18 @@ class PendudukController extends Controller
         return response()->json($data_desa, 200);
     }
 
+    public function showDataDusunByDesaId() {
+        Request()->validate([
+            'desa_id' => 'required'
+        ]);
+        $dusun = Dusun::select()->where('desa_id', Request()->desa_id)->get();
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data Dusun Berhasil Didapatkan!',
+            'data' => $dusun
+        ]);
+    }
+
     public function showDataUserById() {
         Request()->validate([
             'user_id' => 'required'

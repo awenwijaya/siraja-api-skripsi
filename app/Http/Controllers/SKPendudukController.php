@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use App\Models\DetailPenduduk;
 use App\Models\SPPenghasilanOrtu;
 use App\Models\SKKelakuanBaik;
+use App\Models\TempatUsaha;
+use App\Models\SKTempatUsaha;
+use App\Models\Dusun;
 
 class SKPendudukController extends Controller
 {
@@ -22,6 +25,9 @@ class SKPendudukController extends Controller
         $this->DetailPenduduk = new DetailPenduduk;
         $this->SPPenghasilanOrtu = new SPPenghasilanOrtu;
         $this->SKKelakuanBaik = new SKKelakuanBaik;
+        $this->TempatUsaha = new TempatUsaha;
+        $this->SKTempatUsaha = new SKTempatUsaha;
+        $this->Dusun = new Dusun;
     }
 
     public function cek_nikah() {
@@ -127,6 +133,43 @@ class SKPendudukController extends Controller
         return response()->json([
             'status' => 'OK',
             'message' => 'Pengajuan SK Kelakuan Baik Berhasil!'
+        ], 200);
+    }
+
+    public function up_sk_tempat_usaha() {
+        Request()->validate([
+            'nama_tempat_usaha' => 'required',
+            'alamat' => 'required',
+            'jenis_usaha' => 'required',
+            'nama_dusun' => 'required',
+            'penduduk_id' => 'required',
+            'desa_id' => 'required'
+        ]);
+        $id_dusun = Dusun::select('dusun_id')->where('nama_dusun', Request()->nama_dusun)->first();
+        $data_id_dusun = json_decode($id_dusun);
+        $data_tempat_usaha = [
+            'nama_usaha' => Request()->nama_tempat_usaha,
+            'jenis_usaha' => Request()->jenis_usaha,
+            'alamat_usaha' => Request()->alamat,
+            'dusun_id' => $data_id_dusun->dusun_id,
+            'penduduk_id' => Request()->penduduk_id
+        ];
+        $last_tempat_usaha_id = DB::table('tb_tempat_usaha')->insertGetId($data_tempat_usaha);
+        $timestamp = Carbon::now()->toDateTimeString();
+        $data_surat_masyarakat = [
+            'tanggal_pengajuan' => $timestamp,
+            'desa_id' => Request()->desa_id,
+        ];
+        $last_surat_masyarakat_id = DB::table('tb_surat_masyarakat')->insertGetId($data_surat_masyarakat);
+        $data = [
+            'pemohon_id' => Request()->penduduk_id,
+            'id_tempat_usaha' => $last_tempat_usaha_id,
+            'surat_masyarakat_id' => $last_surat_masyarakat_id
+        ];
+        $this->SKTempatUsaha->UpSKTempatUsaha($data);
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Pengajuan SK Tempat Usaha Berhasil!'
         ], 200);
     }
 }
