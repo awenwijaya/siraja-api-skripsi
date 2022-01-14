@@ -7,7 +7,7 @@
         $tmp_name = $_FILES['image']['tmp_name'];
         try {
             move_uploaded_file($tmp_name, $upload_path);
-            $sql = "UPDATE tb_tempat_usaha SET foto = '$file_path' WHERE nama_usaha = '$nama_tempat_usaha';";
+            $sql = "UPDATE tb_tempat_usaha SET foto = '$upload_path' WHERE nama_usaha = '$nama_tempat_usaha';";
             if(mysqli_query($koneksi, $sql)) {
                 $response['error'] = false;
             }

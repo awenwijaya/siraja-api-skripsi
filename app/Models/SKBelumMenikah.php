@@ -23,4 +23,10 @@ class SKBelumMenikah extends Model
     public function UpSKBelumMenikah($data) {
         DB::table('tb_sk_belum_menikah')->insert($data);
     }
+
+    public function BatalkanSKBelumMenikah($id) {
+        DB::table('tb_sk_belum_menikah')
+        ->where('id_sk_belum_menikah', $id)
+        ->delete();
+    }
 }

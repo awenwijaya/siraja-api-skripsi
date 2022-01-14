@@ -172,4 +172,59 @@ class SKPendudukController extends Controller
             'message' => 'Pengajuan SK Tempat Usaha Berhasil!'
         ], 200);
     }
+
+    public function get_tempat_usaha_by_penduduk_id() {
+        Request()->validate([
+            'penduduk_id' => 'required'
+        ]);
+        $data_tempat_usaha = TempatUsaha::select()->where('penduduk_id', Request()->penduduk_id)->get();
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data Tempat Usaha Ditemukan!',
+            'data' => $data_tempat_usaha
+        ]);
+    }
+
+    public function show_sk_belum_menikah_sedang_proses() {
+        Request()->validate([
+            'penduduk_id' => 'required'
+        ]);
+        $data_sk_belum_menikah = SKBelumMenikah::join('tb_surat_masyarakat', 'tb_surat_masyarakat.surat_masyarakat_id', '=', 'tb_sk_belum_menikah.surat_masyarakat_id')
+                                            ->where('penduduk_id', Request()->penduduk_id)
+                                            ->whereIn('status', ['Menunggu Respons', 'Dalam Verifikasi', 'Sedang Diproses'])
+                                            ->get();
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data SK Belum Menikah Berhasil Didapatkan!',
+            'data' => $data_sk_belum_menikah
+        ]);
+    }
+
+    public function show_sk_belum_menikah_selesai() {
+        Request()->validate([
+            'penduduk_id' => 'required'
+        ]);
+        $data_sk_belum_menikah = SKBelumMenikah::join('tb_surat_masyarakat', 'tb_surat_masyarakat.surat_masyarakat_id', '=', 'tb_sk_belum_menikah.surat_masyarakat_id')
+                                            ->where('penduduk_id', Request()->penduduk_id)
+                                            ->where('status', 'Selesai')
+                                            ->get();
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data SK Belum Menikah Berhasil Didapatkan!',
+            'data' => $data_sk_belum_menikah
+        ]);
+    }
+
+    public function cancel_sk_belum_menikah() {
+        Request()->validate([
+            'surat_masyarakat_id' => 'required',
+            'id_sk_belum_menikah' => 'required'
+        ]);
+        $this->SKBelumMenikah->BatalkanSKBelumMenikah(Request()->id_sk_belum_menikah);
+        $this->SuratMasyarakat->BatalkanSuratMasyarakat(Request()->surat_masyarakat_id);
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data SK Belum Menikah Berhasil Dihapus!'
+        ]);
+    }
 }

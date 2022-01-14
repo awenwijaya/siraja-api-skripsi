@@ -23,4 +23,10 @@ class SuratMasyarakat extends Model
     public function UpSuratMasyarakat($data) {
         DB::table('tb_surat_masyarakat')->insert($data);
     }
+
+    public function BatalkanSuratMasyarakat($id) {
+        DB::table('tb_surat_masyarakat')
+        ->where('surat_masyarakat_id', $id)
+        ->delete();
+    }
 }
