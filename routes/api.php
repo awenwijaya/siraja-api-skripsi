@@ -45,21 +45,26 @@ Route::post('countdusun', [PendudukController::class, 'countDusun']);
 Route::post('dusun', [PendudukController::class, 'showDataDusunByDesaId']);
 
 //sk belum menikah
-Route::post('/sk/belumnikah/showSedangDiproses', [SKPendudukController::class, 'show_sk_belum_menikah_sedang_proses']);
-Route::post('/sk/belumnikah/showSelesai', [SKPendudukController::class, 'show_sk_belum_menikah_selesai']);
+Route::post('sk/belumnikah/showSedangDiproses', [SKPendudukController::class, 'show_sk_belum_menikah_sedang_proses']);
+Route::post('sk/belumnikah/showSelesai', [SKPendudukController::class, 'show_sk_belum_menikah_selesai']);
 Route::post('sk/belumnikah/ceknikah', [SKPendudukController::class, 'cek_nikah']);
 Route::post('sk/belumnikah/up', [SKPendudukController::class, 'up_sk_belum_nikah']);
 Route::post('sk/belumnikah/cancel', [SKPendudukController::class, 'cancel_sk_belum_menikah']);
 
 //sp penghasilan orang tua
-Route::post('/sp/penghasilanortu/getdataortu', [SKPendudukController::class, 'get_data_orang_tua']);
-Route::post('/sp/penghasilanortu/up', [SKPendudukController::class, 'up_sp_penghasilan_ortu']);
+Route::post('sp/penghasilanortu/getdataortu', [SKPendudukController::class, 'get_data_orang_tua']);
+Route::post('sp/penghasilanortu/up', [SKPendudukController::class, 'up_sp_penghasilan_ortu']);
 
 //sk kelakuan baik
-Route::post('/sk/kelakuanbaik/up', [SKPendudukController::class, 'up_sk_kelakuan_baik']);
+Route::post('sk/kelakuanbaik/up', [SKPendudukController::class, 'up_sk_kelakuan_baik']);
+Route::post('sk/kelakuanbaik/showSedangDiproses', [SKPendudukController::class, 'show_sk_kelakuan_baik_sedang_proses']);
+Route::post('sk/kelakuanbaik/showSelesai', [SKPendudukController::class, 'show_sk_kelakuan_baik_selesai']);
+Route::post('sk/kelakuanbaik/cancel', [SKPendudukController::class, 'cancel_sk_kelakuan_baik']);
 
 //sk tempat usaha
-Route::post('/sk/tempatusaha/up', [SKPendudukController::class, 'up_sk_tempat_usaha']);
+Route::post('sk/tempatusaha/up', [SKPendudukController::class, 'up_sk_tempat_usaha']);
+Route::post('sk/tempatusaha/showSedangDiproses', [SKPendudukController::class, 'show_sk_tempat_usaha_sedang_proses']);
+Route::post('sk/tempatusaha/showSelesai', [SKPendudukController::class, 'show_sk_tempat_usaha_selesai']);
 
 //sk usaha
-Route::post('/sk/usaha/gettempatusaha', [SKPendudukController::class, 'get_tempat_usaha_by_penduduk_id']);
+Route::post('sk/usaha/gettempatusaha', [SKPendudukController::class, 'get_tempat_usaha_by_penduduk_id']);

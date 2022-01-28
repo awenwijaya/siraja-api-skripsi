@@ -23,4 +23,10 @@ class SKKelakuanBaik extends Model
     public function UpSKKelakuanBaik($data) {
         DB::table('tb_sk_kelakuan_baik')->insert($data);
     }
+
+    public function BatalkanSKKelakuanBaik($id) {
+        DB::table('tb_sk_kelakuan_baik')
+        ->where('id_sk_kelakuan_baik', $id)
+        ->delete();
+    }
 }

@@ -152,7 +152,7 @@ class SKPendudukController extends Controller
             'jenis_usaha' => Request()->jenis_usaha,
             'alamat_usaha' => Request()->alamat,
             'dusun_id' => $data_id_dusun->dusun_id,
-            'penduduk_id' => Request()->penduduk_id
+            'penduduk_id' => Request()->penduduk_id,
         ];
         $last_tempat_usaha_id = DB::table('tb_tempat_usaha')->insertGetId($data_tempat_usaha);
         $timestamp = Carbon::now()->toDateTimeString();
@@ -164,7 +164,8 @@ class SKPendudukController extends Controller
         $data = [
             'pemohon_id' => Request()->penduduk_id,
             'id_tempat_usaha' => $last_tempat_usaha_id,
-            'surat_masyarakat_id' => $last_surat_masyarakat_id
+            'surat_masyarakat_id' => $last_surat_masyarakat_id,
+            'status' => 'Menunggu Respons'
         ];
         $this->SKTempatUsaha->UpSKTempatUsaha($data);
         return response()->json([
@@ -225,6 +226,85 @@ class SKPendudukController extends Controller
         return response()->json([
             'status' => 'OK',
             'message' => 'Data SK Belum Menikah Berhasil Dihapus!'
+        ]);
+    }
+
+    public function show_sk_kelakuan_baik_sedang_proses() {
+        Request()->validate([
+            'penduduk_id' => 'required'
+        ]);
+        $data_sk_kelakuan_baik = SKKelakuanBaik::join('tb_surat_masyarakat', 'tb_surat_masyarakat.surat_masyarakat_id', '=', 'tb_sk_kelakuan_baik.surat_masyarakat_id')
+                                                ->where('penduduk_id', Request()->penduduk_id)
+                                                ->whereIn('status', ['Menunggu Respons', 'Dalam Verifikasi', 'Sedang Diproses'])
+                                                ->get();
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data SK Kelakuan Baik Berhasil Didapatkan!',
+            'data' => $data_sk_kelakuan_baik
+        ]);
+    }
+
+    public function show_sk_kelakuan_baik_selesai() {
+        Request()->validate([
+            'penduduk_id' => 'required'                                         
+        ]);
+        $data_sk_kelakuan_baik = SKKelakuanBaik::join('tb_surat_masyarakat', 'tb_surat_masyarakat.surat_masyarakat_id', '=', 'tb_sk_kelakuan_baik.surat_masyarakat_id')
+                                                    ->where('penduduk_id', Request()->penduduk_id)
+                                                    ->where('status', 'Selesai')
+                                                    ->get();
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data SK Kelakuan Baik Berhasil Didapatkan!',
+            'data' => $data_sk_kelakuan_baik
+        ]);
+    }
+
+    public function cancel_sk_kelakuan_baik() {
+        Request()->validate([
+            'surat_masyarakat_id' => 'required',
+            'id_sk_kelakuan_baik' => 'required'
+        ]);
+        $this->SKKelakuanBaik->BatalkanSKKelakuanBaik(Request()->id_sk_kelakuan_baik);
+        $this->SuratMasyarakat->BatalkanSuratMasyarakat(Request()->surat_masyarakat_id);
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data SK Kelakuan Baik Berhasil Dihapus!'
+        ]);
+    }
+
+    public function show_sk_tempat_usaha_sedang_proses() {
+        Request()->validate([
+            'pemohon_id' => 'required'
+        ]);
+        $data_sk_tempat_usaha = SKTempatUsaha::join('tb_surat_masyarakat', 'tb_surat_masyarakat.surat_masyarakat_id', '=', 'tb_sk_tempat_usaha.surat_masyarakat_id')
+                                            ->join('tb_tempat_usaha', 'tb_tempat_usaha.id_tempat_usaha', '=', 'tb_sk_tempat_usaha.id_tempat_usaha')
+                                            ->join('tb_desa', 'tb_desa.desa_id', '=', 'tb_surat_masyarakat.desa_id')
+                                            ->join('tb_dusun', 'tb_dusun.dusun_id', '=', 'tb_tempat_usaha.dusun_id')
+                                            ->where('pemohon_id', Request()->pemohon_id)
+                                            ->whereIn('status', ['Menunggu Respons', 'Dalam Verifikasi', 'Sedang Diproses'])
+                                            ->get();
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data SK Tempat Usaha Berhasil Didapatkan',
+            'data' => $data_sk_tempat_usaha
+        ]);
+    }
+
+    public function show_sk_tempat_usaha_selesai() {
+        Request()->validate([
+            'pemohon_id' => 'required'
+        ]);
+        $data_sk_tempat_usaha = SKTempatUsaha::join('tb_surat_masyarakat', 'tb_surat_masyarakat.surat_masyarakat_id', '=', 'tb_sk_tempat_usaha.surat_masyarakat_id')
+                                            ->join('tb_tempat_usaha', 'tb_tempat_usaha.id_tempat_usaha', '=', 'tb_sk_tempat_usaha.id_tempat_usaha')
+                                            ->join('tb_desa', 'tb_desa.desa_id', '=', 'tb_surat_masyarakat.desa_id')
+                                            ->join('tb_dusun', 'tb_dusun.dusun_id', '=', 'tb_tempat_usaha.dusun_id')
+                                            ->where('pemohon_id', Request()->pemohon_id)
+                                            ->where('status', 'Selesai')
+                                            ->get();
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data SK Tempat Usaha Berhasil Didapatkan',
+            'data' => $data_sk_tempat_usaha
         ]);
     }
 }
