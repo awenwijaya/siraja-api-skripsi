@@ -30,8 +30,10 @@ class PendudukController extends Controller
         Request()->validate([
             'desa_id' => 'required'
         ]);
-        $data_desa = Desa::select()->where('desa_id', Request()->desa_id)->first();
-        return response()->json($data_desa, 200);
+        $data = Desa::join('tb_kecamatan', 'tb_kecamatan.kecamatan_id', '=', 'tb_desa.kecamatan_id')
+                    ->where('desa_id', Request()->desa_id)
+                    ->first();
+        return response()->json($data, 200);
     }
 
     public function showDataDusunByDesaId() {
