@@ -307,4 +307,34 @@ class SKPendudukController extends Controller
             'data' => $data_sk_tempat_usaha
         ]);
     }
+
+    public function show_sp_penghasilan_ortu_sedang_proses() {
+        Request()->validate([
+            'penduduk_id' => 'required'
+        ]);
+        $data_sp_penghasilan_ortu = SPPenghasilanOrtu::join('tb_surat_masyarakat', 'tb_surat_masyarakat.surat_masyarakat_id', '=', 'tb_sp_penghasilan_ortu.surat_masyarakat_id')
+                                                    ->where('penduduk_id', Request()->penduduk_id)
+                                                    ->whereIn('status', ['Menunggu Respons', 'Dalam Verifikasi', 'Sedang Diproses'])
+                                                    ->get();
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data SP Penghasilan Orang Tua Berhasil Didapatkan!',
+            'data' => $data_sp_penghasilan_ortu
+        ]);
+    }
+
+    public function show_sp_penghasilan_ortu_selesai() {
+        Request()->validate([
+            'penduduk_id' => 'required'
+        ]);
+        $data_sp_penghasilan_ortu = SPPenghasilanOrtu::join('tb_surat_masyarakat', 'tb_surat_masyarakat.surat_masyarakat_id', '=', 'tb_sp_penghasilan_ortu.surat_masyarakat_id')
+                                                    ->where('penduduk_id', Request()->penduduk_id)
+                                                    ->where('status', 'Selesai')
+                                                    ->get();
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data SP Penghasilan Orang Tua Berhasil Didapatkan!',
+            'data' => $data_sp_penghasilan_ortu
+        ]);
+    }
 }

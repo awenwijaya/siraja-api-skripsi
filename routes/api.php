@@ -54,6 +54,8 @@ Route::post('sk/belumnikah/cancel', [SKPendudukController::class, 'cancel_sk_bel
 //sp penghasilan orang tua
 Route::post('sp/penghasilanortu/getdataortu', [SKPendudukController::class, 'get_data_orang_tua']);
 Route::post('sp/penghasilanortu/up', [SKPendudukController::class, 'up_sp_penghasilan_ortu']);
+Route::post('sp/penghasilanortu/showSedangDiproses', [SKPendudukController::class, 'show_sp_penghasilan_ortu_sedang_proses']);
+Route::post('sp/penghasilanortu/showSelesai', [SKPendudukController::class, 'show_sp_penghasilan_ortu_selesai']);
 
 //sk kelakuan baik
 Route::post('sk/kelakuanbaik/up', [SKPendudukController::class, 'up_sk_kelakuan_baik']);
