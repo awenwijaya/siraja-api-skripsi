@@ -25,4 +25,10 @@ class SPPenghasilanOrtu extends Model
     public function UpSPPenghasilanOrtu($data) {
         DB::table('tb_sp_penghasilan_ortu')->insert($data);
     }
+
+    public function BatalkanSPPenghasilanOrtu($id) {
+         DB::table('tb_sp_penghasilan_ortu')
+         ->where('id_sp_penghasilan', $id)
+         ->delete();
+    }
 }

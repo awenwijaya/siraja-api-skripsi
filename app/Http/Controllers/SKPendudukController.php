@@ -337,4 +337,17 @@ class SKPendudukController extends Controller
             'data' => $data_sp_penghasilan_ortu
         ]);
     }
+
+    public function cancel_sp_penghasilan_ortu() {
+        Request()->validate([
+            'surat_masyarakat_id' => 'required',
+            'id_sp_penghasilan' => 'required'
+        ]);
+        $this->SPPenghasilanOrtu->BatalkanSPPenghasilanOrtu(Request()->id_sp_penghasilan);
+        $this->SuratMasyarakat->BatalkanSuratMasyarakat(Request()->surat_masyarakat_id);
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data SP Penghasilan Orang Tua Berhasil Dihapus!'
+        ]);
+    }
 }

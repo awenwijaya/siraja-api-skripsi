@@ -56,6 +56,7 @@ Route::post('sp/penghasilanortu/getdataortu', [SKPendudukController::class, 'get
 Route::post('sp/penghasilanortu/up', [SKPendudukController::class, 'up_sp_penghasilan_ortu']);
 Route::post('sp/penghasilanortu/showSedangDiproses', [SKPendudukController::class, 'show_sp_penghasilan_ortu_sedang_proses']);
 Route::post('sp/penghasilanortu/showSelesai', [SKPendudukController::class, 'show_sp_penghasilan_ortu_selesai']);
+Route::post('sp/penghasilanortu/cancel', [SKPendudukController::class, 'cancel_sp_penghasilan_ortu']);
 
 //sk kelakuan baik
 Route::post('sk/kelakuanbaik/up', [SKPendudukController::class, 'up_sk_kelakuan_baik']);
