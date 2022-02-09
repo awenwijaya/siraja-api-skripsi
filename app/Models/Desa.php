@@ -23,4 +23,10 @@ class Desa extends Model
         'kecamatan_id'
     ];
 
+    public function UpSejarahDesa($id, $data) {
+        DB::table('tb_desa')
+        ->where('desa_id', $id)
+        ->update($data);
+    }
+
 }

@@ -313,7 +313,8 @@ class SKPendudukController extends Controller
             'penduduk_id' => 'required'
         ]);
         $data_sp_penghasilan_ortu = SPPenghasilanOrtu::join('tb_surat_masyarakat', 'tb_surat_masyarakat.surat_masyarakat_id', '=', 'tb_sp_penghasilan_ortu.surat_masyarakat_id')
-                                                    ->where('penduduk_id', Request()->penduduk_id)
+                                                    ->join('tb_penduduk', 'tb_penduduk.penduduk_id', '=', 'tb_sp_penghasilan_ortu.orang_tua_id')
+                                                    ->where('tb_sp_penghasilan_ortu.penduduk_id', Request()->penduduk_id)
                                                     ->whereIn('status', ['Menunggu Respons', 'Dalam Verifikasi', 'Sedang Diproses'])
                                                     ->get();
         return response()->json([
@@ -328,7 +329,8 @@ class SKPendudukController extends Controller
             'penduduk_id' => 'required'
         ]);
         $data_sp_penghasilan_ortu = SPPenghasilanOrtu::join('tb_surat_masyarakat', 'tb_surat_masyarakat.surat_masyarakat_id', '=', 'tb_sp_penghasilan_ortu.surat_masyarakat_id')
-                                                    ->where('penduduk_id', Request()->penduduk_id)
+                                                    ->join('tb_penduduk', 'tb_penduduk.penduduk_id', '=', 'tb_sp_penghasilan_ortu.orang_tua_id')
+                                                    ->where('tb_sp_penghasilan_ortu.penduduk_id', Request()->penduduk_id)
                                                     ->where('status', 'Selesai')
                                                     ->get();
         return response()->json([

@@ -9,6 +9,7 @@ use App\Models\Penduduk;
 use App\Models\Desa;
 use App\Models\Kecamatan;
 use App\Models\Dusun;
+use Illuminate\Support\Facades\DB;
 
 class PendudukController extends Controller
 {
@@ -16,24 +17,6 @@ class PendudukController extends Controller
         $this->Penduduk = new Penduduk;
         $this->Pengguna = new Pengguna;
         $this->Desa = new Desa;
-    }
-
-    public function showDataPendudukById() {
-        Request()->validate([
-            'penduduk_id' => 'required'
-        ]);
-        $hasil_penduduk = Penduduk::select()->where('penduduk_id', Request()->penduduk_id)->first();
-        return response()->json($hasil_penduduk, 200);
-    }
-
-    public function showDataDesaById() {
-        Request()->validate([
-            'desa_id' => 'required'
-        ]);
-        $data = Desa::join('tb_kecamatan', 'tb_kecamatan.kecamatan_id', '=', 'tb_desa.kecamatan_id')
-                    ->where('desa_id', Request()->desa_id)
-                    ->first();
-        return response()->json($data, 200);
     }
 
     public function showDataDusunByDesaId() {
@@ -48,12 +31,12 @@ class PendudukController extends Controller
         ]);
     }
 
-    public function showDataUserById() {
-        Request()->validate([
-            'user_id' => 'required'
-        ]);
-        $data_pengguna = Pengguna::select()->where('user_id', Request()->user_id)->first();
-        return response()->json($data_pengguna, 200);
+    public function userProfile($id) {
+        $data = Penduduk::join('tb_sso', 'tb_sso.penduduk_id', '=', 'tb_penduduk.penduduk_id')
+                        ->join('tb_desa', 'tb_desa.desa_id', '=', 'tb_penduduk.desa_id')
+                        ->where('tb_penduduk.penduduk_id', $id)
+                        ->first();
+        return response()->json($data);
     }
 
     public function editProfile() {
@@ -76,20 +59,39 @@ class PendudukController extends Controller
             'status_perkawinan' => Request()->status_perkawinan,
             'pendidikan_terakhir' => Request()->pendidikan_terakhir
         ];
+        $username_pengguna = Pengguna::select('username')->where('user_id', Request()->user_id)->first();
+        $data_username = json_decode($username_pengguna);
         $cek_username = Pengguna::select('username')->where('username', Request()->username)->first();
-        if($cek_username != null) {
-            return response()->json([
-                'status' => 'Failed',
-                'message' => 'Username sudah terdaftar sebelumnya'
-            ], 501);
+        if($data_username->username != Request()->username) {
+            if($cek_username != null) {
+                return response()->json([
+                    'status' => 'Failed',
+                    'message' => 'Username sudah terdaftar sebelumnya'
+                ], 501);
+            }else{
+                $this->Pengguna->EditProfile($data_user, Request()->user_id);
+                $this->Penduduk->EditPenduduk($data_penduduk, Request()->penduduk_id);
+                return response()->json([
+                    'status' => 'Success',
+                    'message' => 'Profil Berhasil Diubah!'
+                ], 200);
+            } 
         }else{
             $this->Pengguna->EditProfile($data_user, Request()->user_id);
             $this->Penduduk->EditPenduduk($data_penduduk, Request()->penduduk_id);
             return response()->json([
-                'status' => 'OK',
-                'message' => 'Data profil berhasil diubah'
+                'status' => 'Success',
+                'message' => 'Profil Berhasil Diubah!'
             ], 200);
         }
+        
+    }
+
+    public function showDataDesaById($id) {
+        $data = Desa::join('tb_kecamatan', 'tb_kecamatan.kecamatan_id', '=', 'tb_desa.kecamatan_id')
+                    ->where('desa_id', $id)
+                    ->first();
+        return response()->json($data, 200);
     }
 
     public function showDataKecamatanById() {

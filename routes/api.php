@@ -6,6 +6,7 @@ use App\Http\Controllers\AutentikasiController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PendudukController;
 use App\Http\Controllers\SKPendudukController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,16 +34,15 @@ Route::post('cekemail', [AutentikasiController::class, 'cekemail']);
 Route::post('lupapassword', [EmailController::class, 'kirimEmailLupaPassword']);
 
 //profile
+Route::get('profile/{id}', [PendudukController::class, 'userProfile']);
 Route::post('editprofile', [PendudukController::class, 'editProfile']);
 
 //data
-Route::post('getdatapendudukbyid', [PendudukController::class, 'showDataPendudukById']);
-Route::post('getdatadesabyid', [PendudukController::class, 'showDataDesaById']);
-Route::post('getdatapenggunabyid', [PendudukController::class, 'showDataUserById']);
-Route::post('getdatakecamatanbyid', [PendudukController::class, 'showDataKecamatanById']);
+Route::get('/data/desa/{id}', [PendudukController::class, 'showDataDesaById']);
 Route::post('countpenduduk', [PendudukController::class, 'countPendudukDesa']);
 Route::post('countdusun', [PendudukController::class, 'countDusun']);
 Route::post('dusun', [PendudukController::class, 'showDataDusunByDesaId']);
+Route::post('/data/desa/sejarahdesa/up', [AdminController::class, 'up_sejarah_desa']);
 
 //sk belum menikah
 Route::post('sk/belumnikah/showSedangDiproses', [SKPendudukController::class, 'show_sk_belum_menikah_sedang_proses']);
