@@ -34,6 +34,7 @@ class PendudukController extends Controller
     public function userProfile($id) {
         $data = Penduduk::join('tb_sso', 'tb_sso.penduduk_id', '=', 'tb_penduduk.penduduk_id')
                         ->join('tb_desa', 'tb_desa.desa_id', '=', 'tb_penduduk.desa_id')
+                        ->join('tb_pekerjaan', 'tb_pekerjaan.pekerjaan_id', '=', 'tb_penduduk.pekerjaan_id')
                         ->where('tb_penduduk.penduduk_id', $id)
                         ->first();
         return response()->json($data);
@@ -105,12 +106,13 @@ class PendudukController extends Controller
         return response()->json($data_kecamatan, 200);
     }
 
-    public function countPendudukDesa() {
-        Request()->validate([
-            'desa_id' => 'required'
-        ]);
+    public function countPendudukDesa($id) {
+        dd($id);
+        // Request()->validate([
+        //     'desa_id' => 'required'
+        // ]);
         $data = Penduduk::where([
-            ['id_desa', '=', Request()->desa_id],
+            ['desa_id', '=', $id],
             ['status_penduduk', '=', 'Aktif']
         ])->count();
         return response()->json($data, 200);

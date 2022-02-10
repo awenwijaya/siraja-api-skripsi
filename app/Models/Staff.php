@@ -20,4 +20,8 @@ class Staff extends Model
         'penduduk_id',
         'masa_berakhir'
     ];
+
+    public function UpDataStaff($data) {
+        DB::table('tb_staff')->insert($data);
+    }
 }

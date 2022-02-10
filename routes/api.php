@@ -39,7 +39,7 @@ Route::post('editprofile', [PendudukController::class, 'editProfile']);
 
 //data
 Route::get('/data/desa/{id}', [PendudukController::class, 'showDataDesaById']);
-Route::post('countpenduduk', [PendudukController::class, 'countPendudukDesa']);
+Route::get('countpenduduk/{id}', [PendudukController::class, 'countPendudukDesa']);
 Route::post('countdusun', [PendudukController::class, 'countDusun']);
 Route::post('dusun', [PendudukController::class, 'showDataDusunByDesaId']);
 Route::post('/data/desa/sejarahdesa/up', [AdminController::class, 'up_sejarah_desa']);
@@ -73,3 +73,9 @@ Route::post('sk/tempatusaha/showSelesai', [SKPendudukController::class, 'show_sk
 
 //sk usaha
 Route::post('sk/usaha/gettempatusaha', [SKPendudukController::class, 'get_tempat_usaha_by_penduduk_id']);
+
+//admin
+Route::get('admin/addstaff/cek/{id}', [AdminController::class, 'cek_nik_staff']);
+Route::get('admin/addstaff/list_jabatan', [AdminController::class, 'list_jabatan']);
+Route::get('admin/addstaff/list_unit', [AdminController::class, 'list_unit']);
+Route::post('admin/addstaff/post', [AdminController::class, 'simpan_staff']);

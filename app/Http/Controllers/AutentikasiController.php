@@ -22,7 +22,7 @@ class AutentikasiController extends Controller
                 'nik' => 'required'
             ]
         );
-        $hasil_cek = Penduduk::select()->where('nik', Request()->nik)->first();
+        $hasil_cek = Penduduk::select()->where('penduduk_id', Request()->nik)->first();
         if($hasil_cek == null) {
             return response()->json([
                 'status' => 'Failed',
