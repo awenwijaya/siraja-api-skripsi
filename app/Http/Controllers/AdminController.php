@@ -89,20 +89,12 @@ class AdminController extends Controller
 
     public function list_jabatan() {
         $data = Jabatan::select()->get();
-        return response()->json([
-            'status' => 'OK',
-            'message' => 'Data Jabatan berhasil Didapatkan!',
-            'data' => $data
-        ], 200);
+        return response()->json($data, 200);
     }
 
     public function list_unit() {
         $data = Unit::select()->get();
-        return response()->json([
-            'status' => 'OK',
-            'message' => 'Data Unit berhasil Didapatkan!',
-            'data' => $data
-        ], 200);
+        return response()->json($data, 200);
     }
 
     public function simpan_staff() {
@@ -125,6 +117,27 @@ class AdminController extends Controller
         return response()->json([
             'status' => "OK",
             'message' => 'Data Pegawai berhasil Didaftarkan!'
+        ], 200);
+    }
+
+    public function update_staff() {
+        Request()->validate([
+            'nama_jabatan' => 'required',
+            'nama_unit' => 'required',
+            'staff_id' => 'required'
+        ]);
+        $jabatan = Jabatan::select('jabatan_id')->where('nama_jabatan', Request()->nama_jabatan)->first();
+        $data_jabatan = json_decode($jabatan);
+        $unit = Unit::select('unit_id')->where('nama_unit', Request()->nama_unit)->first();
+        $data_unit = json_decode($unit);
+        $data = [
+            'jabatan_id' => $data_jabatan->jabatan_id,
+            'unit_id' => $data_unit->unit_id
+        ];
+        $this->Staff->EditStaff($data, Request()->staff_id);
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data Staff berhasil Diperbaharui'
         ], 200);
     }
 }

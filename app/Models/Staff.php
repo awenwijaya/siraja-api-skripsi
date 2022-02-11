@@ -24,4 +24,10 @@ class Staff extends Model
     public function UpDataStaff($data) {
         DB::table('tb_staff')->insert($data);
     }
+
+    public function EditStaff($data, $id) {
+        DB::table('tb_staff')
+        ->where('staff_id', $id)
+        ->update($data);
+    }
 }

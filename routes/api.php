@@ -79,3 +79,4 @@ Route::get('admin/addstaff/cek/{id}', [AdminController::class, 'cek_nik_staff'])
 Route::get('admin/addstaff/list_jabatan', [AdminController::class, 'list_jabatan']);
 Route::get('admin/addstaff/list_unit', [AdminController::class, 'list_unit']);
 Route::post('admin/addstaff/post', [AdminController::class, 'simpan_staff']);
+Route::post('admin/staff/update', [AdminController::class, 'update_staff']);
