@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use DateTimeInterface;
 
 class Penduduk extends Model
 {
@@ -12,6 +13,10 @@ class Penduduk extends Model
     use HasFactory;
 
     protected $table = 'tb_penduduk';
+
+    protected $dates = [
+        'tanggal_lahir'
+      ];
 
     protected $fillable = [
         'penduduk_id',
@@ -42,4 +47,9 @@ class Penduduk extends Model
         ->where('penduduk_id', $id)
         ->update($data);
     }
+
+    protected function serializeDate(DateTimeInterface $date)
+  {
+    return $date->format('d-M-Y');
+  }
 }

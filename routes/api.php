@@ -74,9 +74,15 @@ Route::post('sk/tempatusaha/showSelesai', [SKPendudukController::class, 'show_sk
 //sk usaha
 Route::post('sk/usaha/gettempatusaha', [SKPendudukController::class, 'get_tempat_usaha_by_penduduk_id']);
 
-//admin
+//staff
+Route::get('admin/detailstaff/{id}', [AdminController::class, 'show_detail_staff_by_id']);
 Route::get('admin/addstaff/cek/{id}', [AdminController::class, 'cek_nik_staff']);
 Route::get('admin/addstaff/list_jabatan', [AdminController::class, 'list_jabatan']);
 Route::get('admin/addstaff/list_unit', [AdminController::class, 'list_unit']);
 Route::post('admin/addstaff/post', [AdminController::class, 'simpan_staff']);
 Route::post('admin/staff/update', [AdminController::class, 'update_staff']);
+Route::get('admin/staff/show_masa_mulai/{id}', [AdminController::class, 'show_masa_mulai_karyawan']);
+Route::post('admin/staff/set_tidak_aktif', [AdminController::class, 'set_karyawan_tidak_aktif']);
+
+//dusun
+Route::post('dusun/cek', [AdminController::class, 'cek_nama_dusun']);

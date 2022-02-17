@@ -8,7 +8,9 @@ use App\Models\Desa;
 use App\Models\Penduduk;
 use App\Models\Staff;
 use App\Models\Unit;
+use App\Models\Dusun;
 use App\Models\Jabatan;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -18,6 +20,7 @@ class AdminController extends Controller
         $this->Staff = new Staff;
         $this->Jabatan = new Jabatan;
         $this->Unit = new Unit;
+        $this->Dusun = new Dusun;
     }
 
     public function up_sejarah_desa() {
@@ -65,6 +68,16 @@ class AdminController extends Controller
         ], 200);
     }
 
+    public function show_detail_staff_by_id($id) {
+        $data = Staff::join('tb_penduduk', 'tb_penduduk.penduduk_id', '=', 'tb_staff.penduduk_id')
+                    ->join('tb_unit', 'tb_unit.unit_id', '=', 'tb_staff.unit_id')
+                    ->join('tb_jabatan', 'tb_jabatan.jabatan_id', '=', 'tb_staff.jabatan_id')
+                    ->join('tb_desa', 'tb_desa.desa_id', '=', 'tb_penduduk.desa_id')
+                    ->where('tb_staff.staff_id', $id)
+                    ->first();
+        return response()->json($data, 200);
+    }
+
     public function cek_nik_staff($id) {
         $hasil_cek = Penduduk::select()->where('penduduk_id', $id)->first();
         $data_penduduk = json_decode($hasil_cek);
@@ -101,7 +114,10 @@ class AdminController extends Controller
         Request()->validate([
             'penduduk_id' => 'required',
             'nama_jabatan' => 'required',
-            'nama_unit' => 'required'
+            'nama_unit' => 'required',
+            'masa_mulai' => 'required',
+            'file_sk' => 'required',
+            'desa_id' => 'required'
         ]);
         $jabatan = Jabatan::select('jabatan_id')->where('nama_jabatan', Request()->nama_jabatan)->first();
         $data_jabatan = json_decode($jabatan);
@@ -111,7 +127,10 @@ class AdminController extends Controller
            'jabatan_id' => $data_jabatan->jabatan_id,
            'unit_id' => $data_unit->unit_id,
            'status' => 'Aktif',
-           'penduduk_id' => Request()->penduduk_id 
+           'penduduk_id' => Request()->penduduk_id,
+           'masa_mulai' => Request()->masa_mulai,
+           'file_sk' => Request()->file_sk,
+           'desa_id' => Request()->desa_id
         ];
         $this->Staff->UpDataStaff($data);
         return response()->json([
@@ -124,7 +143,7 @@ class AdminController extends Controller
         Request()->validate([
             'nama_jabatan' => 'required',
             'nama_unit' => 'required',
-            'staff_id' => 'required'
+            'staff_id' => 'required',
         ]);
         $jabatan = Jabatan::select('jabatan_id')->where('nama_jabatan', Request()->nama_jabatan)->first();
         $data_jabatan = json_decode($jabatan);
@@ -138,6 +157,48 @@ class AdminController extends Controller
         return response()->json([
             'status' => 'OK',
             'message' => 'Data Staff berhasil Diperbaharui'
+        ], 200);
+    }
+
+    public function cek_nama_dusun() {
+        Request()->validate([
+            'nama_dusun' => 'required'
+        ]);
+        $data = Dusun::select('nama_dusun')->where('nama_dusun', Request()->nama_dusun)->first();
+        if($data != null) {
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Dusun sudah terdaftar'
+            ], 501);
+        }else{
+            return response()->json([
+                'status' => 'OK',
+                'message' => 'Dusun belum terdaftar'
+            ], 200);
+        }
+    }
+
+    public function show_masa_mulai_karyawan($id) {
+        $data = DB::table('tb_staff')
+                ->select('masa_mulai')
+                ->where('staff_id', '=', $id)
+                ->first();
+        return response()->json($data, 200);
+    }
+
+    public function set_karyawan_tidak_aktif() {
+        Request()->validate([
+            'staff_id' => 'required',
+            'masa_berakhir' => 'required'
+        ]);
+        $data = [
+            'masa_berakhir' => Request()->masa_berakhir,
+            'status' => 'Tidak Aktif'
+        ];
+        $this->Staff->EditStaff($data, Request()->staff_id);
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Karyawan berhasil di non-aktifkan'
         ], 200);
     }
 }
