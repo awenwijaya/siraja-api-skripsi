@@ -112,14 +112,16 @@ class AdminController extends Controller
 
     public function simpan_staff() {
         Request()->validate([
-            'penduduk_id' => 'required',
+            'nama_staff' => 'required',
             'nama_jabatan' => 'required',
             'nama_unit' => 'required',
             'masa_mulai' => 'required',
             'file_sk' => 'required',
             'desa_id' => 'required'
         ]);
+        $pegawai = Penduduk::select('penduduk_id')->where('nama_lengkap', Request()->nama_staff)->first();
         $jabatan = Jabatan::select('jabatan_id')->where('nama_jabatan', Request()->nama_jabatan)->first();
+        $data_pegawai = json_decode($pegawai);
         $data_jabatan = json_decode($jabatan);
         $unit = Unit::select('unit_id')->where('nama_unit', Request()->nama_unit)->first();
         $data_unit = json_decode($unit);
@@ -127,7 +129,7 @@ class AdminController extends Controller
            'jabatan_id' => $data_jabatan->jabatan_id,
            'unit_id' => $data_unit->unit_id,
            'status' => 'Aktif',
-           'penduduk_id' => Request()->penduduk_id,
+           'penduduk_id' => $data_pegawai->penduduk_id,
            'masa_mulai' => Request()->masa_mulai,
            'file_sk' => Request()->file_sk,
            'desa_id' => Request()->desa_id
@@ -144,6 +146,7 @@ class AdminController extends Controller
             'nama_jabatan' => 'required',
             'nama_unit' => 'required',
             'staff_id' => 'required',
+            'file_sk' => 'required'
         ]);
         $jabatan = Jabatan::select('jabatan_id')->where('nama_jabatan', Request()->nama_jabatan)->first();
         $data_jabatan = json_decode($jabatan);
@@ -151,7 +154,8 @@ class AdminController extends Controller
         $data_unit = json_decode($unit);
         $data = [
             'jabatan_id' => $data_jabatan->jabatan_id,
-            'unit_id' => $data_unit->unit_id
+            'unit_id' => $data_unit->unit_id,
+            'file_sk' => Request()->file_sk
         ];
         $this->Staff->EditStaff($data, Request()->staff_id);
         return response()->json([

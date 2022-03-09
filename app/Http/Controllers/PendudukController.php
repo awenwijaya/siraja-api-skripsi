@@ -10,6 +10,8 @@ use App\Models\Desa;
 use App\Models\Kecamatan;
 use App\Models\Dusun;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 
 class PendudukController extends Controller
 {
@@ -43,49 +45,45 @@ class PendudukController extends Controller
     public function editProfile() {
         Request()->validate([
             'user_id' => 'required',
-            'penduduk_id' => 'required',
             'username' => 'required',
-            'alamat' => 'required',
-            'agama' => 'required',
-            'status_perkawinan' => 'required',
-            'pendidikan_terakhir' => 'required'
+            'password' => 'required',
+            'password_sekarang' => 'required'
         ]);
         $data_user = [
-            'username' => Request()->username
+            'username' => Request()->username,
+            'password' => Hash::make(Request()->password),
         ];
-        $data_penduduk = [
-            'alamat' => Request()->alamat,
-            'agama' => Request()->agama,
-            'alamat' => Request()->alamat,
-            'status_perkawinan' => Request()->status_perkawinan,
-            'pendidikan_terakhir' => Request()->pendidikan_terakhir
-        ];
-        $username_pengguna = Pengguna::select('username')->where('user_id', Request()->user_id)->first();
+        $username_pengguna = Pengguna::select()->where('user_id', Request()->user_id)->first();
         $data_username = json_decode($username_pengguna);
         $cek_username = Pengguna::select('username')->where('username', Request()->username)->first();
-        if($data_username->username != Request()->username) {
-            if($cek_username != null) {
-                return response()->json([
-                    'status' => 'Failed',
-                    'message' => 'Username sudah terdaftar sebelumnya'
-                ], 501);
-            }else{
+        if(Hash::check(Request()->password_sekarang, $data_username->password)) {
+            if($data_username->username == Request()->username) {
                 $this->Pengguna->EditProfile($data_user, Request()->user_id);
-                $this->Penduduk->EditPenduduk($data_penduduk, Request()->penduduk_id);
                 return response()->json([
                     'status' => 'Success',
                     'message' => 'Profil Berhasil Diubah!'
                 ], 200);
-            } 
+            }else{
+                if($cek_username != null) {
+                    return response()->json([
+                        'status' => 'Failed',
+                        'message' => 'Username sudah terdaftar sebelumnya'
+                    ], 501);
+                }else{
+                    $this->Pengguna->EditProfile($data_user, Request()->user_id);
+                    return response()->json([
+                        'status' => 'Success',
+                        'message' => 'Profil Berhasil Diubah!'
+                    ], 200);
+                }
+                
+            }
         }else{
-            $this->Pengguna->EditProfile($data_user, Request()->user_id);
-            $this->Penduduk->EditPenduduk($data_penduduk, Request()->penduduk_id);
             return response()->json([
-                'status' => 'Success',
-                'message' => 'Profil Berhasil Diubah!'
-            ], 200);
+                'status' => 'Failed',
+                'message' => 'Password Salah!'
+            ], 502);
         }
-        
     }
 
     public function showDataDesaById($id) {
@@ -124,5 +122,14 @@ class PendudukController extends Controller
         ]);
         $data = Dusun::where('desa_id', Request()->desa_id)->count();
         return response()->json($data, 200);
+    }
+
+    public function show_all_penduduk_by_desa_id($id) {
+        $data = Penduduk::select()->where('desa_id', $id)->get();
+        return response()->json([
+            'status' => 'OK',
+            'message' => 'Data berhasil didapatkan!',
+            'data' => $data
+        ], 200);
     }
 }

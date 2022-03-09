@@ -45,6 +45,7 @@ Route::post('dusun', [PendudukController::class, 'showDataDusunByDesaId']);
 Route::post('/data/desa/sejarahdesa/up', [AdminController::class, 'up_sejarah_desa']);
 Route::get('/data/staff/aktif/{id}', [AdminController::class, 'show_staff_desa_by_id_aktif']);
 Route::get('/data/staff/tidakaktif/{id}', [AdminController::class, 'show_staff_desa_by_id_tidak_aktif']);
+Route::get('/data/penduduk/{id}', [PendudukController::class, 'show_all_penduduk_by_desa_id']);
 
 //sk belum menikah
 Route::post('sk/belumnikah/showSedangDiproses', [SKPendudukController::class, 'show_sk_belum_menikah_sedang_proses']);
@@ -83,6 +84,5 @@ Route::post('admin/addstaff/post', [AdminController::class, 'simpan_staff']);
 Route::post('admin/staff/update', [AdminController::class, 'update_staff']);
 Route::get('admin/staff/show_masa_mulai/{id}', [AdminController::class, 'show_masa_mulai_karyawan']);
 Route::post('admin/staff/set_tidak_aktif', [AdminController::class, 'set_karyawan_tidak_aktif']);
-
 //dusun
 Route::post('dusun/cek', [AdminController::class, 'cek_nama_dusun']);
